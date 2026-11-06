@@ -43,3 +43,14 @@ desktop.ini
 # Временные файлы
 *.tmp
 *.swp
+
+# Локальная база SQLite
+data/
+
+
+# Сессия Telegram-обходчика — это доступ к аккаунту, в git нельзя
+tools/.tg-session*
+tools/.tg-session
+research/*.raw
+research/miniapp/
+
