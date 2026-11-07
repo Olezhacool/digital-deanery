@@ -1,18 +1,14 @@
 # Зависимости
 node_modules/
-.pnp
-.pnp.js
+.venv/
+__pycache__/
+*.pyc
 
-# Сборка
-.next/
-out/
-build/
-dist/
-
-# Переменные окружения
+# Данные и секреты
+storage/
 .env
-.env*.local
 .env.local
+.env*.local
 
 # Логи
 npm-debug.log*

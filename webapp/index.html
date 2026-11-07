@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ECEDF3">
+<title>Цифровой деканат</title>
+<style>
+:root{--bg:#ECEDF3;--card:#F3F4FA;--ink:#17181D;--mut:#8A8FA3;--pri:#4B6EF5;--red:#E8405A;
+--line:#E3E5EE;--nav:rgba(255,255,255,.92);--chip:#fff;--soft:#E1E6FD;--ok:#16A34A;--warn:#F59E0B;
+padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101117;--card:#1A1C25;--ink:#F2F3F8;
+--mut:#7E8399;--line:#2A2D3A;--nav:rgba(28,30,40,.94);--chip:#1A1C25;--soft:#2A3566}}
+:root[data-theme="dark"]{--bg:#101117;--card:#1A1C25;--ink:#F2F3F8;--mut:#7E8399;--line:#2A2D3A;
+--nav:rgba(28,30,40,.94);--chip:#1A1C25;--soft:#2A3566}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Roboto,system-ui,sans-serif}
+body{max-width:520px;margin:0 auto;padding:20px 20px 120px;min-height:100vh}
+h1{font-size:40px;line-height:1.05;margin:12px 0 8px;letter-spacing:-1px;font-weight:800}
+h2{font-size:26px;margin:24px 0 12px;font-weight:800;letter-spacing:-.5px}
+h3{font-weight:800}
+.sub{display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px;margin-bottom:20px}
+.sub span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--pri);flex:none}
+.dot.g{background:#22C55E;box-shadow:0 0 0 4px #22C55E33}
+.dot.r{background:var(--red)}
+.seg{display:flex;background:var(--card);border-radius:999px;padding:6px;margin-bottom:20px}
+.seg button{flex:1;border:0;background:none;color:var(--mut);font:600 17px inherit;font-family:inherit;padding:14px;border-radius:999px}
+.seg button.on{background:var(--ink);color:var(--bg);box-shadow:0 6px 16px #0003}
+.lab{color:var(--mut);font-weight:700;font-size:14px;letter-spacing:1px;margin:22px 4px 10px;text-transform:uppercase}
+.card{background:var(--card);border-radius:30px;padding:20px;margin-bottom:12px}
+.chips{display:flex;gap:10px;overflow-x:auto;margin:0 -20px 16px;padding:0 20px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:0;background:var(--chip);color:var(--ink);font:600 17px inherit;font-family:inherit;padding:13px 22px;border-radius:999px}
+.chip.on{background:var(--ink);color:var(--bg)}
+.hero{border-radius:32px;padding:22px;color:#fff;background:linear-gradient(135deg,#FF7A45,#EC4062 55%,#A5217F);
+box-shadow:0 14px 30px #EC406240;margin-bottom:16px}
+.hero .tag{display:inline-block;background:#ffffff33;border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px}
+.hero h3{font-size:30px;margin:14px 0 10px;letter-spacing:-.5px}
+.hero p{margin:4px 0;font-weight:600;font-size:17px}
+.row{display:flex;align-items:center;gap:14px}.sp{justify-content:space-between}
+.btn{border:0;background:#fff;color:var(--red);font:700 19px inherit;font-family:inherit;padding:16px 28px;border-radius:999px}
+.btn-pri{width:100%;border:0;background:var(--pri);color:#fff;font:700 19px inherit;font-family:inherit;padding:18px;border-radius:999px;cursor:pointer}
+.btn-pri:active{opacity:.85}
+.btn-ghost{border:0;background:var(--card);color:var(--ink);font:700 17px inherit;font-family:inherit;padding:15px 22px;border-radius:999px;cursor:pointer}
+.item{display:flex;align-items:center;gap:16px;padding:14px 4px;cursor:pointer}
+.date{width:66px;height:66px;flex:none;background:var(--chip);border-radius:20px;display:grid;place-content:center;text-align:center}
+.date b{font-size:30px;line-height:1}.date small{color:var(--red);font-weight:700;font-size:15px}
+.item h4{margin:0 0 4px;font-size:20px;line-height:1.2}
+.item span{color:var(--mut);font-size:17px}
+.item em{margin-left:auto;color:var(--mut);font-style:normal;font-size:24px}
+.days{display:flex;gap:8px;margin-bottom:18px}
+.day{flex:1;border:0;background:var(--card);color:var(--mut);border-radius:26px;padding:14px 0;font:600 15px inherit;font-family:inherit;cursor:pointer}
+.day b{display:block;font-size:26px;color:var(--ink);margin-top:4px}
+.day.on{background:var(--ink);color:var(--bg)}.day.on b{color:var(--bg)}
+.pair{display:flex;gap:16px}
+.pair .t{width:62px;flex:none}.pair .t b{font-size:23px}
+.pair .t div{color:var(--mut);font-size:19px;margin:2px 0 14px}
+.pair .t small{color:var(--mut);font-weight:700;font-size:13px;letter-spacing:1px}
+.pair .b{border-left:4px solid var(--pri);padding-left:16px;flex:1}
+.pair h4{margin:0 0 10px;font-size:23px;line-height:1.2}
+.badge{background:var(--soft);color:var(--pri);font-weight:700;padding:6px 14px;border-radius:12px;font-size:17px;margin-right:8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.stats div{background:var(--card);border-radius:24px;padding:16px;color:var(--mut);font-size:16px}
+.stats b{display:block;color:var(--ink);font-size:26px;margin-top:6px;font-weight:800}
+.grade{display:flex;align-items:flex-start;gap:14px;background:var(--card);border-radius:26px;padding:18px;margin-bottom:10px}
+.grade .g{flex:none;width:56px;height:56px;border-radius:18px;display:grid;place-items:center;font-size:24px;font-weight:800;background:var(--chip)}
+.g5{color:#15803D;background:#DCFCE7}.g4{color:#1D4ED8;background:#DBEAFE}
+.g3{color:#B45309;background:#FEF3C7}.g2{color:#B91C1C;background:#FEE2E2}
+.grade h4{margin:0 0 4px;font-size:20px}
+.grade p{margin:0;color:var(--mut);font-size:16px}
+.grade .vals{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.vals span{background:var(--chip);color:var(--mut);border-radius:10px;padding:5px 10px;font-size:14px;font-weight:600}
+.st{display:inline-block;border-radius:999px;padding:7px 14px;font-size:15px;font-weight:700}
+.st.new{background:var(--soft);color:var(--pri)}
+.st.in_progress{background:#FEF3C7;color:#B45309}
+.st.ready{background:#DCFCE7;color:#15803D}
+.st.rejected{background:#FEE2E2;color:#B91C1C}
+.who{text-align:center}
+.av{width:140px;height:140px;border-radius:50%;background:var(--pri);color:#fff;font-size:70px;font-weight:700;
+display:grid;place-items:center;margin:10px auto}
+.menu{background:var(--card);border-radius:30px;overflow:hidden}
+.menu .it{display:flex;align-items:center;gap:16px;padding:16px 20px;border-top:1px solid var(--line);font-weight:700;font-size:19px}
+.menu .it:first-child{border:0}
+.menu .it u{margin-left:auto;text-decoration:none;color:var(--mut);font-weight:500;font-size:16px}
+.ic{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-size:20px;flex:none}
+.foot{color:var(--mut);text-align:center;margin:28px 8px;font-size:15px;line-height:1.5}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));
+width:min(480px,calc(100% - 24px));display:flex;background:var(--nav);backdrop-filter:blur(16px);border-radius:999px;
+padding:10px;box-shadow:0 10px 40px #0002;z-index:40}
+.nav button{flex:1;border:0;background:none;color:var(--mut);font:600 13px inherit;font-family:inherit;padding:10px 0;
+border-radius:24px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.nav button.on{background:var(--ink);color:var(--bg)}
+.nav svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:flex-end;z-index:50}
+.sheet{background:var(--card);width:100%;max-width:520px;margin:0 auto;border-radius:30px 30px 0 0;
+padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px));max-height:85vh;overflow:auto}
+.sheet h3{margin:0 0 8px;font-size:24px}
+.sheet textarea,.field{width:100%;border:0;background:var(--bg);color:var(--ink);border-radius:18px;padding:16px;
+font:17px inherit;font-family:inherit;margin:10px 0;resize:none}
+.field:focus,.sheet textarea:focus{outline:2px solid var(--pri);outline-offset:0}
+.login{max-width:420px;margin:0 auto}
+.logo{width:72px;height:72px;border-radius:24px;background:linear-gradient(135deg,#4B6EF5,#7C3AED);
+color:#fff;display:grid;place-items:center;font:800 34px inherit;margin:20px 0 8px}
+.demo{display:flex;align-items:center;gap:12px;padding:16px 18px;cursor:pointer}
+.demo b{font-size:18px}.demo span{color:var(--mut);font-size:15px;display:block}
+.err{color:var(--red);font-weight:600;font-size:16px;margin:10px 0 0;min-height:20px}
+.chat{position:fixed;inset:0;z-index:60;background:var(--bg);display:flex;flex-direction:column;
+max-width:520px;margin:0 auto;padding-top:env(safe-area-inset-top,0px)}
+.chat header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.chat header b{font-size:20px}
+.chat header button{margin-left:auto;border:0;background:none;color:var(--pri);font:600 17px inherit;font-family:inherit}
+.msgs{flex:1;overflow:auto;padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:85%;padding:14px 18px;border-radius:22px;font-size:17px;line-height:1.4;white-space:pre-wrap}
+.msg.bot{background:var(--card);border-bottom-left-radius:8px;align-self:flex-start}
+.msg.me{background:var(--pri);color:#fff;border-bottom-right-radius:8px;align-self:flex-end}
+.chat .inp{display:flex;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.chat .inp input{flex:1;min-width:0;border:0;background:var(--card);color:var(--ink);border-radius:999px;padding:16px 20px;font:17px inherit;font-family:inherit}
+.chat .inp button{border:0;background:var(--pri);color:#fff;border-radius:50%;width:54px;height:54px;font-size:22px;cursor:pointer}
+.skel{background:linear-gradient(90deg,var(--card) 25%,var(--line) 50%,var(--card) 75%);
+background-size:200% 100%;animation:sh 1.4s infinite;border-radius:26px;height:96px;margin-bottom:12px}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.empty{background:var(--card);border-radius:26px;padding:26px 20px;text-align:center;color:var(--mut);font-size:17px;line-height:1.45}
+.empty b{display:block;color:var(--ink);font-size:20px;margin-bottom:6px}
+.quick{display:flex;gap:10px;margin-bottom:16px}
+.quick button{flex:1;border:0;border-radius:22px;padding:16px 12px;font:700 16px inherit;font-family:inherit;cursor:pointer}
+.q1{background:var(--pri);color:#fff}.q2{background:var(--card);color:var(--ink)}
+.ann{background:var(--card);border-radius:26px;padding:18px;margin-bottom:10px}
+.ann .tag{display:inline-block;background:var(--soft);color:var(--pri);border-radius:10px;padding:5px 10px;font-size:13px;font-weight:700;margin-bottom:8px}
+.ann h4{margin:0 0 6px;font-size:19px}
+.ann p{margin:0;color:var(--mut);font-size:16px;line-height:1.4}
+.timeline{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.tl{display:flex;gap:12px;align-items:flex-start;color:var(--mut);font-size:16px}
+.tl i{width:12px;height:12px;border-radius:50%;background:var(--line);flex:none;margin-top:5px}
+.tl.on{color:var(--ink);font-weight:600}.tl.on i{background:var(--ok)}
+a{color:var(--pri);text-decoration:none}
+</style></head><body>
+<main id="app"></main>
+<nav class="nav" id="nav" hidden></nav>
+<script>
+const MON=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const MON3=['ЯНВ','ФЕВ','МАР','АПР','МАЙ','ИЮН','ИЮЛ','АВГ','СЕН','ОКТ','НОЯ','ДЕК'];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dp=iso=>iso.slice(0,10).split('-').map(Number);
+const dfmt=iso=>{const[,m,d]=dp(iso);return d+' '+MON[m-1]};
+const tfmt=iso=>iso.slice(11,16);
+const addDays=(iso,n)=>{const d=new Date(iso+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
+const daysTo=iso=>Math.max(0,Math.ceil((new Date(iso)-new Date())/864e5));
+const plural=(n,a,b,c)=>{n=Math.abs(n);return n%10===1&&n%100!==11?a:n%10>=2&&n%10<=4&&(n%100<12||n%100>14)?b:c};
+let S=null;
+const st={tab:'home',sched:'Пары',day:null,off:0,chat:[]};
+try{Object.assign(st,JSON.parse(localStorage.getItem('dd')||'{}'))}catch(e){}
+st.off=0;
+const save=()=>{try{localStorage.setItem('dd',JSON.stringify({tab:st.tab,sched:st.sched,day:st.day,theme:document.documentElement.dataset.theme||''}))}catch(e){}};
+const theme=localStorage.getItem('ddtheme');if(theme)document.documentElement.dataset.theme=theme;
+
+async function api(p,body){
+  const r=await fetch(p,{method:body?'POST':'GET',headers:{'Content-Type':'application/json'},
+    body:body?JSON.stringify(body):undefined,credentials:'same-origin'});
+  if(!r.ok){const e=await r.json().catch(()=>({}));const err=new Error(e.error||('Ошибка '+r.status));err.status=r.status;throw err}
+  return r.json();
+}
+function toast(m){const o=document.createElement('div');o.className='modal';o.innerHTML=`<div class="sheet"><h3>${esc(m)}</h3><button class="btn-pri" id="tx">Понятно</button></div>`;document.body.appendChild(o);o.querySelector('#tx').onclick=()=>o.remove();o.onclick=e=>{if(e.target===o)o.remove()}}
+
+/* ---------- экраны ---------- */
+function loginView(){
+  return `<div class="login"><div class="logo">Д</div><h1>Цифровой деканат</h1>
+  <div class="sub"><i class="dot g"></i><span>Личный кабинет студента</span></div>
+  <div class="card">
+    <input class="field" id="lg" placeholder="Логин" autocomplete="username">
+    <input class="field" id="pw" type="password" placeholder="Пароль" autocomplete="current-password">
+    <button class="btn-pri" onclick="doLogin()">Войти</button>
+    <p class="err" id="lgerr"></p>
+  </div>
+  <div class="lab">Демо-доступ</div>
+  <div class="card demo" onclick="fill('anna','anna2026')">
+    <div class="ic" style="background:#4B6EF5">А</div>
+    <div><b>Иванова Анна</b><span>ИТ-2-1 · anna / anna2026</span></div>
+  </div>
+  <div class="card demo" onclick="fill('maxim','maxim2026')">
+    <div class="ic" style="background:#16A34A">М</div>
+    <div><b>Петров Максим</b><span>ЭК-1-2 · maxim / maxim2026</span></div>
+  </div>
+  <p class="foot">Концепт для конкурса. Не официальный сервис вуза.<br>Все данные вымышленные.</p></div>`;
+}
+function fill(l,p){document.getElementById('lg').value=l;document.getElementById('pw').value=p;document.getElementById('lgerr').textContent=''}
+async function doLogin(){
+  const lg=document.getElementById('lg').value.trim(),pw=document.getElementById('pw').value;
+  const e=document.getElementById('lgerr');e.textContent='';
+  try{await api('/api/login',{login:lg,password:pw});await load()}
+  catch(err){e.textContent=err.message}
+}
+async function doLogout(){await api('/api/logout',{});S=null;document.getElementById('nav').hidden=true;render()}
+
+function nextLine(){
+  const n=S.next;
+  if(!n)return 'На сегодня пар больше нет';
+  return `Далее: ${esc(n.title)} <span style="color:var(--mut);font-weight:500">· через ${n.in_min>=60?Math.floor(n.in_min/60)+' ч ':''}${n.in_min%60} мин</span>`;
+}
+function lessonCard(l,date){
+  return `<div class="card pair"><div class="t"><b>${l.start}</b><div>${l.end}</div><small>${l.n} ПАРА</small></div>
+  <div class="b"><h4>${esc(l.title)}</h4><span class="badge">${esc(l.kind)}</span>
+  <span style="color:var(--mut);font-size:18px">· ${esc(l.room)}</span>
+  <p style="color:var(--mut);font-size:18px;margin:10px 0 0">${esc(l.teacher)}</p></div></div>`;
+}
+function dueSquare(a){
+  const[,m,d]=dp(a.due_at);const left=a.days_left;
+  return `<div class="date"><b>${d}</b><small>${MON3[m-1]}</small></div>`;
+}
+function statusPill(r){return `<span class="st ${esc(r.status)}">${esc(r.status_label)}</span>`}
+
+const V={
+home:()=>{
+  const m=S.me,n=S.next;
+  const hero=n?`<div class="hero"><span class="tag">● Далее через ${n.in_min} мин</span>
+    <h3>${esc(n.title)}</h3>
+    <p>🕘 ${n.start}–${n.end} · ${esc(n.room)}</p>
+    <p>👤 ${esc(n.teacher)}</p></div>`
+    :`<div class="card"><b style="font-size:20px">На сегодня пар больше нет</b>
+    <p style="color:var(--mut);margin:8px 0 0">Можно выдохнуть или заглянуть в завтрашний день.</p></div>`;
+  const today=S.today_lessons.map(l=>`<div class="item" onclick="go('sched')">
+    <div class="date"><b>${l.start}</b><small>${l.end}</small></div>
+    <div><h4>${esc(l.title)}</h4><span>${esc(l.kind)} · ${esc(l.room)}</span></div><em>›</em></div>`).join('')
+    ||`<div class="empty"><b>Сегодня пар нет</b>Свободный день — так и надо.</div>`;
+  const dl=S.assignments.filter(a=>a.status!=='accepted').slice(0,3).map(a=>`
+    <div class="item" onclick="openAssignment(${a.id})">${dueSquare(a)}
+    <div><h4>${esc(a.title)}</h4><span>${esc(a.subject)} · ${a.days_left<=0?'просрочено':a.days_left+' '+plural(a.days_left,'день','дня','дней')}</span></div><em>›</em></div>`).join('')
+    ||`<div class="empty"><b>Дедлайнов нет</b>Всё сдано — красота.</div>`;
+  const ann=S.announcements.slice(0,2).map(a=>`<div class="ann"><span class="tag">${esc(a.tag)}</span>
+    <h4>${esc(a.title)}</h4><p>${esc(a.body)}</p></div>`).join('');
+  return `<h1>Привет, ${esc(m.first_name)}</h1>
+  <div class="sub"><i class="dot ${n?'':'g'}"></i><span>${nextLine()}</span></div>
+  ${hero}
+  <div class="quick"><button class="q1" onclick="openRequest()">＋ Заказать справку</button>
+  <button class="q2" onclick="openAI()">✦ Спросить ИИ</button></div>
+  <h2>Сегодня</h2>${today}
+  <h2>Дедлайны</h2>${dl}
+  <h2>Объявления</h2>${ann}`;
+},
+sched:()=>{
+  const w=S.week;
+  if(st.day===null)st.day=Math.min(S.today.weekday,5);
+  const date=addDays(w.monday,st.day);
+  const ls=w.days[st.day+1]||[];
+  return `<h1>Расписание</h1>
+  <div class="sub"><i class="dot"></i><span>${esc(S.me.group)} · ${w.number}-я неделя, ${w.parity}</span></div>
+  ${seg('sched',['Пары','Сессия'])}
+  ${st.sched==='Сессия'
+    ? (S.grades.exams.length?S.grades.exams.map(x=>`<div class="card">
+        <b style="font-size:20px">${esc(x.title)}</b>
+        <p style="margin:8px 0 0;color:var(--mut);font-size:17px">${dfmt(x.date)} · ${esc(x.time)} · ${esc(x.kind)}<br>${esc(x.room)} · ${esc(x.teacher)}</p></div>`).join('')
+      :`<div class="empty"><b>Сессия ещё не опубликована</b>Расписание появится здесь, как только его утвердят.</div>`)
+    : `<div class="row sp" style="margin-bottom:16px">
+        <div><b style="font-size:20px">${w.number}-я неделя</b> <span style="color:var(--mut)">· ${w.parity}</span></div>
+        <div class="row" style="gap:8px"><button class="chip" onclick="shiftWeek(-1)">‹</button>
+        <button class="chip" onclick="shiftWeek(1)">›</button></div></div>
+      <div class="days">${['Пн','Вт','Ср','Чт','Пт','Сб'].map((d,i)=>`<button class="day ${st.day===i?'on':''}"
+        onclick="setDay(${i})">${d}<b>${+addDays(w.monday,i).slice(8)}</b></button>`).join('')}</div>
+      ${ls.map(l=>lessonCard(l,date)).join('')||`<div class="empty"><b>Пар нет</b>В этот день можно выдохнуть.</div>`}`}`;
+},
+grades:()=>{
+  const g=S.grades,s=g.stats;
+  const subs=g.subjects.map(x=>{
+    const last=x.grades[x.grades.length-1];
+    const cls=!last?'':(last.value==='5'?'g5':last.value==='4'?'g4':last.value==='3'?'g3':last.value==='2'||last.value==='Незачёт'?'g2':'g5');
+    const vals=x.grades.map(v=>`<span>${esc(v.kind)}: ${esc(v.value)}</span>`).join('');
+    return `<div class="grade"><div class="g ${cls}">${last?esc(last.value):'—'}</div>
+      <div style="min-width:0"><h4>${esc(x.name)}</h4><p>${esc(x.teacher)}</p>
+      ${vals?`<div class="vals">${vals}</div>`:'<p style="margin-top:8px">Оценок пока нет</p>'}</div></div>`;
+  }).join('');
+  const exams=g.exams.map(x=>`<div class="item"><div class="date"><b>${dp(x.date)[2]}</b>
+    <small>${MON3[dp(x.date)[1]-1]}</small></div>
+    <div><h4>${esc(x.title)}</h4><span>${esc(x.kind)} · ${esc(x.time)} · ${esc(x.room)}</span></div></div>`).join('');
+  return `<h1>Успеваемость</h1>
+  <div class="sub"><i class="dot ${s.debts?'r':'g'}"></i><span>${s.debts?'Есть незакрытые дисциплины':'Долгов нет'}</span></div>
+  <div class="stats"><div>Средний балл<b>${s.avg}</b></div>
+  <div>Дисциплин<b>${s.subjects}</b></div><div>Кредитов<b>${s.credits}</b></div></div>
+  ${s.debts?`<div class="card" style="border-left:4px solid var(--red)">
+    <b style="font-size:19px">Незакрытые: ${s.debts}</b>
+    <p style="color:var(--mut);margin:8px 0 0;font-size:16px">Загляните в расписание сессии и договоритесь о пересдаче.</p></div>`:''}
+  <h2>Дисциплины</h2>${subs||`<div class="empty"><b>Пока пусто</b>Оценки появятся после первой аттестации.</div>`}
+  <h2>Сессия</h2>${exams||`<div class="empty"><b>Сессия не назначена</b>Даты появятся здесь.</div>`}`;
+},
+reqs:()=>{
+  const list=S.requests.map(r=>`<div class="item" onclick="openRequestDetail(${r.id})">
+    <div class="date" style="background:var(--chip)"><b style="font-size:22px">${esc(r.number.split('-')[1])}</b><small>${esc(r.number.split('-')[0])}</small></div>
+    <div><h4>${esc(r.kind)}</h4><span>${dfmt(r.created_at)} · ${statusPill(r)}</span></div><em>›</em></div>`).join('');
+  return `<h1>Заявки</h1>
+  <div class="sub"><i class="dot"></i><span>${S.requests.length} ${plural(S.requests.length,'заявка','заявки','заявок')} · справки и документы</span></div>
+  <button class="btn-pri" onclick="openRequest()" style="margin-bottom:18px">＋ Новая заявка</button>
+  ${list||`<div class="empty"><b>Заявок пока нет</b>Закажите справку — она появится здесь со статусом.</div>`}
+  <p class="foot">Справка готовится 3 рабочих дня.<br>Забрать можно в кабинете 105.</p>`;
+},
+prof:()=>{
+  const m=S.me;
+  return `<h1>Профиль</h1>
+  <div class="sub"><i class="dot g"></i><span>Студент · ${esc(m.group)}</span></div>
+  <div class="who"><div class="av">${esc(m.letter)}</div>
+  <h2 style="margin:6px 0 4px">${esc(m.name)}</h2>
+  <span style="color:var(--mut);font-weight:600;font-size:17px">${esc(m.group)} · ${m.course} курс</span></div>
+  <h2>О студенте</h2>
+  <div class="menu">
+    ${[['🏛','#4B6EF5','Факультет',m.faculty],['📚','#7C3AED','Направление',m.program],
+      ['🎓','#16A34A','Курс и группа',m.course+' курс · '+m.group],['🪪','#F59E0B','Зачётная книжка',m.record_book],
+      ['✉️','#0EA5E9','Почта',m.email]].map(r=>`<div class="it"><div class="ic" style="background:${r[1]}">${r[0]}</div>
+      <div style="min-width:0"><div style="font-size:17px">${r[2]}</div>
+      <div style="color:var(--mut);font-weight:500;font-size:15px;overflow:hidden;text-overflow:ellipsis">${esc(r[3])}</div></div></div>`).join('')}
+  </div>
+  <h2>Настройки</h2>
+  <div class="menu">
+    <div class="it" onclick="toggleNotify()"><div class="ic" style="background:#F97316">🔔</div>Напоминания<u>${m.notify?'вкл':'выкл'} ›</u></div>
+    <div class="it" onclick="toggleTheme()"><div class="ic" style="background:#6B7280">🌓</div>Тема<u>${document.documentElement.dataset.theme==='dark'?'тёмная':'светлая'} ›</u></div>
+    <div class="it" onclick="doLogout()"><div class="ic" style="background:#E8405A">↪</div>Выйти<u>›</u></div>
+  </div>
+  <p class="foot">Цифровой деканат будущего — концепт для конкурса.<br>Не официальный сервис вуза. Все данные вымышленные.</p>`;
+}};
+
+const TABS=[['home','Главная','M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z'],
+['sched','Расписание','<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>'],
+['grades','Оценки','<path d="M4 19V5m0 14h16"/><path d="M8 16v-5M12 16V8M16 16v-3"/>'],
+['reqs','Заявки','<path d="M6 3h9l5 5v13H6z"/><path d="M14 3v6h6M9 13h7M9 17h5"/>'],
+['prof','Профиль','<circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3.5"/><path d="M5.5 19c2-3 4-4 6.5-4s4.5 1 6.5 4"/>']];
+
+function render(){
+  const app=document.getElementById('app'),nav=document.getElementById('nav');
+  if(!S){app.innerHTML=loginView();nav.hidden=true;return}
+  if(st.day===null)st.day=Math.min(S.today.weekday,5);
+  if(!V[st.tab])st.tab='home';
+  app.innerHTML=V[st.tab]();
+  nav.hidden=false;
+  nav.innerHTML=TABS.map(t=>`<button class="${st.tab===t[0]?'on':''}" onclick="go('${t[0]}')">
+    <svg viewBox="0 0 24 24">${t[2]}</svg>${t[1]}</button>`).join('');
+}
+function go(t){st.tab=t;save();render();scrollTo(0,0)}
+function setDay(i){st.day=i;save();render()}
+function seg(k,opts){return `<div class="seg">${opts.map(o=>`<button class="${st[k]===o?'on':''}" onclick="set('${k}','${o}')">${o}</button>`).join('')}</div>`}
+function set(k,v){st[k]=v;save();render()}
+async function shiftWeek(d){st.off+=d;S.week=await api('/api/schedule?offset='+st.off);render()}
+async function toggleNotify(){await api('/api/settings',{notify:!S.me.notify});await load()}
+function toggleTheme(){
+  const r=document.documentElement,c=r.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  r.dataset.theme=c==='dark'?'light':'dark';localStorage.setItem('ddtheme',r.dataset.theme);save();render();
+}
+
+/* ---------- заявки ---------- */
+const KINDS=['Справка об обучении','Справка в военкомат','Справка для стипендии','Копия зачётной книжки','Академическая справка'];
+function openRequest(){
+  const o=document.createElement('div');o.className='modal';
+  o.innerHTML=`<div class="sheet"><h3>Новая заявка</h3>
+    <p style="color:var(--mut);margin:0 0 6px">Что нужно?</p>
+    <div class="chips" id="rk" style="margin:0 0 6px;padding:0">${KINDS.map((k,i)=>`<button class="chip ${i===0?'on':''}" data-k="${esc(k)}" onclick="pickKind(this)">${esc(k)}</button>`).join('')}</div>
+    <textarea id="rc" rows="3" maxlength="500" placeholder="Комментарий (необязательно)"></textarea>
+    <div class="row" style="gap:10px"><button class="btn-ghost" id="rx">Отмена</button>
+    <button class="btn-pri" id="ro">Отправить</button></div></div>`;
+  document.body.appendChild(o);
+  o.querySelector('#rx').onclick=()=>o.remove();
+  o.onclick=e=>{if(e.target===o)o.remove()};
+  o.querySelector('#ro').onclick=async()=>{
+    const kind=o.querySelector('.chip.on').dataset.k,comment=o.querySelector('#rc').value.trim();
+    o.remove();
+    try{S.requests=(await api('/api/requests',{kind,comment})).requests;go('reqs');toast('Заявка отправлена')}
+    catch(e){toast(e.message)}
+  };
+}
+function pickKind(el){el.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
+async function openRequestDetail(id){
+  let r;try{r=await api('/api/requests/'+id)}catch(e){return toast(e.message)}
+  const steps=[['new','Заявка создана'],['in_progress','В работе у деканата'],['ready','Готова к выдаче']];
+  const idx=steps.findIndex(s=>s[0]===r.status);
+  const o=document.createElement('div');o.className='modal';
+  o.innerHTML=`<div class="sheet"><h3>${esc(r.kind)}</h3>
+    <p style="color:var(--mut);margin:0 0 4px">${esc(r.number)} · ${statusPill(r)}</p>
+    <div class="timeline">${steps.map((s,i)=>`<div class="tl ${i<=idx?'on':''}"><i></i>${s[1]}</div>`).join('')}</div>
+    ${r.comment?`<p style="color:var(--mut);font-size:16px">Комментарий: ${esc(r.comment)}</p>`:''}
+    <p style="color:var(--mut);font-size:15px">Создана ${dfmt(r.created_at)} в ${tfmt(r.created_at)}</p>
+    <button class="btn-pri" id="rd">Понятно</button></div>`;
+  document.body.appendChild(o);o.querySelector('#rd').onclick=()=>o.remove();o.onclick=e=>{if(e.target===o)o.remove()};
+}
+async function openAssignment(id){
+  const a=S.assignments.find(x=>x.id===id);if(!a)return;
+  const o=document.createElement('div');o.className='modal';
+  const done=a.status!=='todo';
+  o.innerHTML=`<div class="sheet"><h3>${esc(a.title)}</h3>
+    <p style="color:var(--mut);margin:0 0 10px">${esc(a.subject)} · сдать до ${dfmt(a.due_at)}, ${tfmt(a.due_at)}</p>
+    <p style="font-size:17px;line-height:1.4">${esc(a.description)}</p>
+    ${done?'<p style="color:var(--ok);font-weight:700">✓ Работа отправлена</p>':
+      '<button class="btn-pri" id="as">Отметить как сданное</button>'}
+    <button class="btn-ghost" id="ax" style="width:100%;margin-top:10px">Закрыть</button></div>`;
+  document.body.appendChild(o);o.querySelector('#ax').onclick=()=>o.remove();o.onclick=e=>{if(e.target===o)o.remove()};
+  const btn=o.querySelector('#as');
+  if(btn)btn.onclick=async()=>{
+    try{S.assignments=(await api('/api/assignments/'+id+'/submit',{})).assignments;o.remove();render();toast('Отмечено как сданное')}
+    catch(e){toast(e.message)}
+  };
+}
+
+/* ---------- ассистент ---------- */
+function openAI(){
+  if(document.getElementById('ai'))return;
+  const o=document.createElement('div');o.id='ai';o.className='chat';
+  o.innerHTML=`<header><div class="ic" style="background:linear-gradient(135deg,#4B6EF5,#7C3AED)">✦</div>
+    <b>Ассистент</b><button id="aic">Закрыть</button></header>
+    <div class="msgs" id="aim"><div class="msg bot">Привет! Я знаю ваше расписание, дедлайны, оценки и заявки. Спросите что-нибудь.</div></div>
+    <div class="chips" id="aich" style="margin:0;padding:8px 16px 0">
+      ${['Что сдать на этой неделе?','Когда следующая пара?','Как дела с учёбой?','Что с моими заявками?'].map(q=>`<button class="chip" onclick="askAI('${esc(q)}')">${esc(q)}</button>`).join('')}
+    </div>
+    <div class="inp"><input id="aiq" placeholder="Напишите вопрос…" enterkeyhint="send">
+    <button onclick="askAI()" aria-label="Отправить">↑</button></div>`;
+  document.body.appendChild(o);document.body.style.overflow='hidden';
+  const close=()=>{o.remove();document.body.style.overflow=''};
+  o.querySelector('#aic').onclick=close;
+  o.querySelector('#aiq').onkeydown=e=>{if(e.key==='Enter')askAI()};
+  o.querySelector('#aiq').focus();
+}
+async function askAI(text){
+  const inp=document.getElementById('aiq');
+  const q=(text||inp.value).trim();if(!q)return;
+  inp.value='';
+  const box=document.getElementById('aim');
+  box.insertAdjacentHTML('beforeend',`<div class="msg me">${esc(q)}</div>`);
+  const thinking=document.createElement('div');thinking.className='msg bot';thinking.textContent='…';
+  box.appendChild(thinking);box.scrollTop=box.scrollHeight;
+  try{
+    const r=await api('/api/ai',{question:q});
+    thinking.textContent=r.answer;
+  }catch(e){thinking.textContent='Не получилось ответить: '+e.message}
+  box.scrollTop=box.scrollHeight;
+}
+
+/* ---------- загрузка ---------- */
+async function load(){
+  S=await api('/api/bootstrap');
+  if(st.day===null)st.day=Math.min(S.today.weekday,5);
+  render();
+}
+function skeleton(){
+  document.getElementById('app').innerHTML=`<div style="height:52px"></div>
+  <div class="skel" style="height:180px"></div><div class="skel"></div><div class="skel"></div>`;
+}
+(async()=>{
+  skeleton();
+  try{await load()}
+  catch(e){
+    if(e.status===401){S=null;render();return}
+    document.getElementById('app').innerHTML=`<h1>Нет связи</h1><div class="card">${esc(e.message)}</div>`;
+  }
+})();
+</script></body></html>
